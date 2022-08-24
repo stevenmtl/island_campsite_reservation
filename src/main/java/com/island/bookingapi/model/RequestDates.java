@@ -15,9 +15,9 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class RequestDates {
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-    @NotNull(message = "checkinDate cannot be null")
-    private LocalDate checkinDate;
+    @NotNull(message = "startDate cannot be null")
+    private LocalDate startDate;
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-    @NotNull(message = "checkoutDate cannot be null")
-    private LocalDate checkoutDate;
+    @NotNull(message = "endDate cannot be null")
+    private LocalDate endDate;
 }

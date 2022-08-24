@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import javax.validation.constraints.Negative;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
@@ -31,6 +32,9 @@ public class ReservationEntity {
     private int numOfGuests;
     @Convert(converter = StringToEnumConverter.class)
     private ReservationStatus status;
-    //@Version
-    private int versionNum;
+    @Transient
+    private String bookingErrorMsg;
+    @Version
+    @Column(name = "OPTLOCK")
+    private int version;
 }

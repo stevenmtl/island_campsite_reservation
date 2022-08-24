@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -20,9 +21,12 @@ public class InventoryEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int inventoryId;
-    private String siteName;
+    @Builder.Default
+    private String siteName = "Island_Campsite";
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate stayDate;
     private int freeSiteNumber;
-    //@Version
-    private String versionNum;
+    @Version
+    @Column(name = "OPTLOCK")
+    private int version;
 }

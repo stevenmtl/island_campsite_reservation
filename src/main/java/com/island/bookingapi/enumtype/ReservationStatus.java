@@ -10,7 +10,8 @@ public enum ReservationStatus {
     RESERVED("RESERVED"),
     CHECKIN("CHECKIN"),
     CHECKOUT("CHECKOUT"),
-    CANCELLED("CANCELLED");
+    CANCELLED("CANCELLED"),
+    FAIL("FAIL");
 
     @Getter
     String value;
