@@ -37,12 +37,12 @@ public class BookingCancellation {
         if( previousReservationEntity != null ){
 
             if( previousReservationEntity.getStatus() == ReservationStatus.CANCELLED ){
-                errorMsg = "This reservation id: " + previousReservationId + " was already cancelled for email : !" + bookingEmail;
+                errorMsg = "This reservation id: " + previousReservationId + " was already cancelled for email: " + bookingEmail;
                 log.info(errorMsg);
                 previousReservationEntity.setCancellErrorMsg(errorMsg);
                 return previousReservationEntity;
             }else if( !previousReservationEntity.getEmail().equalsIgnoreCase(bookingEmail) ){
-                errorMsg = "This reservation id: " + previousReservationId + " doesn't match with email : !" + bookingEmail;
+                errorMsg = "A correct original email is needed for cancellation for this reservation id: " + previousReservationId + " since " + bookingEmail +" doesn't match with original email!" ;
                 log.info(errorMsg);
                 previousReservationEntity.setCancellErrorMsg(errorMsg);
                 return previousReservationEntity;

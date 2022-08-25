@@ -2,6 +2,7 @@ package com.island.bookingapi.component;
 
 import com.island.bookingapi.builder.ReservationEntityBuilder;
 import com.island.bookingapi.model.RequestReservation;
+import com.island.bookingapi.predicate.ReservationDateRangePredicate;
 import com.island.bookingapi.repository.InventoryRepository;
 import com.island.bookingapi.repository.ReservationRespository;
 import org.junit.jupiter.api.Test;
@@ -30,6 +31,8 @@ class BookingReservationTest {
     private InventoryRepository inventoryRepository;
     @Mock
     private  ReservationEntityBuilder reservationEntityBuilder;
+    @Mock
+    private ReservationDateRangePredicate reservationDateRangePredicate;
 
 
 

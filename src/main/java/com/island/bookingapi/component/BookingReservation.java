@@ -4,6 +4,7 @@ import com.island.bookingapi.builder.ReservationEntityBuilder;
 import com.island.bookingapi.entity.ReservationEntity;
 import com.island.bookingapi.enumtype.ReservationStatus;
 import com.island.bookingapi.model.RequestReservation;
+import com.island.bookingapi.predicate.ReservationDateRangePredicate;
 import com.island.bookingapi.repository.InventoryRepository;
 import com.island.bookingapi.repository.ReservationRespository;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 
 @Component
 @RequiredArgsConstructor
@@ -25,6 +25,7 @@ public class BookingReservation {
     private final ReservationRespository reservationRespository;
     private final InventoryRepository inventoryRepository;
     private final ReservationEntityBuilder reservationEntityBuilder;
+    private final ReservationDateRangePredicate reservationDateRangePredicate;
 
     /**
      * reserve campsites for a user during specified checkin/checkout dates with the number of guests.
@@ -45,14 +46,11 @@ public class BookingReservation {
         //finally, a reservation id is returned if free site num is enough; otherwise, this reservation failed and return
         //error code/msg to client side via controller
         var newReservation = reservationEntityBuilder.apply(requestReservation);
-        var startDate = requestReservation.getStartDate();
-        var endDate = requestReservation.getEndDate();
+
         String errorMsg;
 
         //max 3 days can be reserved for each booking
-        var bookingDays = ChronoUnit.DAYS.between(startDate,endDate);
-
-        if ( bookingDays > 3 ) {
+        if ( reservationDateRangePredicate.test(requestReservation) ) {
             newReservation.setStatus(ReservationStatus.FAIL);
             errorMsg = "The total number of days should be <= 3 days.";
             newReservation.setBookingErrorMsg(errorMsg);
@@ -60,10 +58,13 @@ public class BookingReservation {
             return newReservation;
         }
 
+        var startDate = requestReservation.getStartDate();
+        var endDate = requestReservation.getEndDate();
+
         //booking date should be between tomorrow and up to 1 month
         if( startDate.isBefore(LocalDate.now().plusDays(1)) || endDate.isAfter(LocalDate.now().plusMonths(1)) ){
             newReservation.setStatus(ReservationStatus.FAIL);
-            newReservation.setBookingErrorMsg("The date ranges of booking should be betwee " + LocalDate.now().plusDays(1)
+            newReservation.setBookingErrorMsg("The date ranges of booking should be between " + LocalDate.now().plusDays(1)
                     + " and " + LocalDate.now().plusMonths(1));
             return newReservation;
         }
