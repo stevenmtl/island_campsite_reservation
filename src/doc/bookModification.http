@@ -1,0 +1,13 @@
+POST http://localhost:9090/modifyReservation
+Content-Type: application/json
+
+{
+  "startDate":"2022-09-01",
+  "endDate":"2022-09-03",
+  "email":"steven.mtl@gmail.com",
+  "name":"Steven Li",
+  "numOfGuests": 10,
+  "previousReservationId": 1
+}
+
+###

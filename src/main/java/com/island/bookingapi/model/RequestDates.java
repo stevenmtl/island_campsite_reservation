@@ -3,6 +3,7 @@ package com.island.bookingapi.model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.validation.annotation.Validated;
 
@@ -11,6 +12,7 @@ import java.time.LocalDate;
 
 @Data
 @Validated
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
 public class RequestDates {

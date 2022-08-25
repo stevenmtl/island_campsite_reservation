@@ -1,0 +1,9 @@
+POST http://localhost:9090/initInventory
+Content-Type: application/json
+
+{
+  "startDate":"2022-08-25",
+  "endDate":"2022-09-24"
+}
+
+###

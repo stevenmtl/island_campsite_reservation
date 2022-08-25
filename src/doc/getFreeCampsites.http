@@ -1,0 +1,9 @@
+POST http://localhost:9090/getFreeCampSites
+Content-Type: application/json
+
+{
+  "startDate":"2022-09-01",
+  "endDate":"2022-09-03"
+}
+
+###

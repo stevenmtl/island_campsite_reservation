@@ -1,0 +1,12 @@
+POST http://localhost:9090/bookReservation
+Content-Type: application/json
+
+{
+  "startDate":"2022-08-25",
+  "endDate":"2022-08-27",
+  "email":"slow_transaction_demo@gmail.com",
+  "name":"slow_transaction_demo",
+  "numOfGuests": 20
+}
+
+###

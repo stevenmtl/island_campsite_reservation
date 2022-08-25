@@ -1,13 +1,13 @@
 package com.island.bookingapi.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.NotNull;
 
-@Data
+@Data()
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 @Validated
 @NoArgsConstructor
 @AllArgsConstructor

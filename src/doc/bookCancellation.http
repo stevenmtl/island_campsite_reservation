@@ -1,0 +1,9 @@
+POST http://localhost:9090/cancelReservation
+Content-Type: application/json
+
+{
+    "previousReservationId": 7,
+    "email":"steven.mtl@gmail.com"
+}
+
+###
