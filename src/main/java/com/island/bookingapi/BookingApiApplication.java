@@ -2,6 +2,7 @@ package com.island.bookingapi;
 
 import com.island.bookingapi.service.MaintenanceService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -16,6 +17,8 @@ import java.time.LocalDate;
 @EnableRetry
 public class BookingApiApplication {
 
+    @Value("${booking.inventory.totalcampsites}")
+    private int initTotalCampsites;
     public static void main(String[] args) {
         SpringApplication.run(BookingApiApplication.class, args);
     }
@@ -41,7 +44,7 @@ public class BookingApiApplication {
 
             log.info("Init our inventory for demo purpose:");
             var maintenanceService = (MaintenanceService)ctx.getBean(MaintenanceService.class);
-            var inventories = maintenanceService.initInventory(LocalDate.now().plusDays(1),LocalDate.now().plusMonths(1), 100);
+            var inventories = maintenanceService.initInventory(LocalDate.now().plusDays(1),LocalDate.now().plusMonths(1).plusDays(3), initTotalCampsites);
             log.info("Below campsites have been added in inventory:");
             inventories.stream().forEach(System.out::println);
         };

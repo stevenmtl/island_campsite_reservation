@@ -8,6 +8,7 @@ import com.island.bookingapi.model.RequestDates;
 import com.island.bookingapi.service.MaintenanceService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -21,6 +22,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class BookingController {
 
+    @Value("${booking.inventory.totalcampsites}")
+    private int initTotalCampsites;
     private final BookingService bookingService;
     private final MaintenanceService maintenanceService;
 
@@ -31,7 +34,7 @@ public class BookingController {
             return ResponseEntity.badRequest()
                     .body(bindingResult.getAllErrors().stream().map(DefaultMessageSourceResolvable::getDefaultMessage));
         }
-        return ResponseEntity.ok().body(maintenanceService.initInventory(requestDates.getStartDate(),requestDates.getEndDate(), 100));
+        return ResponseEntity.ok().body(maintenanceService.initInventory(requestDates.getStartDate(),requestDates.getEndDate(), initTotalCampsites));
     }
 
     @PostMapping(path = "/getFreeCampSites")

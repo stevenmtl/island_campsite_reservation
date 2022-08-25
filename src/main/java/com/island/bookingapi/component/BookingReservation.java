@@ -62,9 +62,9 @@ public class BookingReservation {
         var endDate = requestReservation.getEndDate();
 
         //booking date should be between tomorrow and up to 1 month
-        if( startDate.isBefore(LocalDate.now().plusDays(1)) || endDate.isAfter(LocalDate.now().plusMonths(1)) ){
+        if( startDate.isBefore(LocalDate.now().plusDays(1)) || startDate.isAfter(LocalDate.now().plusMonths(1)) ){
             newReservation.setStatus(ReservationStatus.FAIL);
-            newReservation.setBookingErrorMsg("The date ranges of booking should be between " + LocalDate.now().plusDays(1)
+            newReservation.setBookingErrorMsg("The start date on this reservation should be between " + LocalDate.now().plusDays(1)
                     + " and " + LocalDate.now().plusMonths(1));
             return newReservation;
         }
