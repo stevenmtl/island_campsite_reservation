@@ -1,6 +1,7 @@
 package com.island.bookingapi.controller;
 
 import com.island.bookingapi.component.Booking;
+import com.island.bookingapi.model.RequestCancellation;
 import com.island.bookingapi.model.RequestReservation;
 import com.island.bookingapi.model.RequestDates;
 import lombok.RequiredArgsConstructor;
@@ -46,7 +47,7 @@ public class BookingController {
 
     @PostMapping(path = "/reserveCampsite")
     public ResponseEntity<Object> reserveCampSite(@Validated @RequestBody RequestReservation requestReservation, BindingResult bindingResult){
-        log.info("A new reservation request with below info: {}", requestReservation.toString());
+        log.info("A new reservation request received with below info: {}", requestReservation.toString());
         if(bindingResult.hasErrors()){
             return ResponseEntity.badRequest()
                     .body(bindingResult.getAllErrors().stream().map(DefaultMessageSourceResolvable::getDefaultMessage));
@@ -54,5 +55,14 @@ public class BookingController {
         return ResponseEntity.ok().body(booking.reserveCampsite(requestReservation));
     }
 
+    @PostMapping(path = "/cancelReservation")
+    public ResponseEntity<Object> cancelReservation(@Validated @RequestBody RequestCancellation requestCancellation, BindingResult bindingResult){
+        log.info("A new cancellation request received with below info: {}", requestCancellation.toString());
+        if(bindingResult.hasErrors()){
+            return ResponseEntity.badRequest()
+                    .body(bindingResult.getAllErrors().stream().map(DefaultMessageSourceResolvable::getDefaultMessage));
+        }
+        return ResponseEntity.ok().body(booking.cancelReservation(requestCancellation));
+    }
 
 }

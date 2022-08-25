@@ -12,6 +12,7 @@ import javax.persistence.*;
 import javax.validation.constraints.Negative;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 
 @Entity
@@ -32,8 +33,12 @@ public class ReservationEntity {
     private int numOfGuests;
     @Convert(converter = StringToEnumConverter.class)
     private ReservationStatus status;
+    private LocalDateTime bookingDT;
+    private LocalDateTime updateDT;
     @Transient
     private String bookingErrorMsg;
+    @Transient
+    private String cancellErrorMsg;
     @Version
     @Column(name = "OPTLOCK")
     private int version;

@@ -9,6 +9,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Builder
@@ -26,6 +27,7 @@ public class InventoryEntity implements Serializable {
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate stayDate;
     private int freeSiteNumber;
+    private LocalDateTime updateDT;
     @Version
     @Column(name = "OPTLOCK")
     private int version;

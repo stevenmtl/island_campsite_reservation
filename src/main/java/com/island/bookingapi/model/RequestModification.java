@@ -12,6 +12,6 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RequestModification extends RequestReservation {
-    @NotNull(message = "The reservationId cannot be null")
+    @NotNull(message = "The previous reservation Id cannot be null")
     private int previousReservationId;
 }
