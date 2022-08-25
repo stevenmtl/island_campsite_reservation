@@ -1,6 +1,7 @@
 # Getting Started
 
 ### How to start this service
+(since this spring boot project is configured with Java 17,please install it before running this project.)
 1. After you git clone this project from : 
 
 https://github.com/stevenmtl/island_campsite_reservation.git
