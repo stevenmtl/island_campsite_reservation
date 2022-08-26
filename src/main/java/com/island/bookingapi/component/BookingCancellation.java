@@ -23,6 +23,7 @@ public class BookingCancellation {
     private final InventoryRepository inventoryRepository;
 
     @Retryable(maxAttempts = 3, value = RuntimeException.class, backoff = @Backoff(delay = 1000, multiplier = 2))
+    @Transactional
     public ReservationEntity cancelReservation(RequestCancellation requestCancellation){
         //1.fetch the reservation record by reservation id and email
         //2.mark the reservation as cancelled
@@ -30,6 +31,8 @@ public class BookingCancellation {
         //If concurrent data inconsistency occurs, this method will be retried;
         //if it still fails for 3 times, the exception will throw via http response.
         String errorMsg;
+
+        log.info("Start to cancel a reservation:");
         var previousReservationId = requestCancellation.getPreviousReservationId();
         var bookingEmail = requestCancellation.getEmail();
 
@@ -63,8 +66,7 @@ public class BookingCancellation {
 
     }
 
-    @Transactional
-    protected ReservationEntity completeCancellation(ReservationEntity previousReservationEntity){
+    private ReservationEntity completeCancellation(ReservationEntity previousReservationEntity){
 
         var checkinDate = previousReservationEntity.getCheckinDate();
         var checkoutDate = previousReservationEntity.getCheckoutDate();
@@ -79,6 +81,7 @@ public class BookingCancellation {
 
         inventoryRepository.saveAllAndFlush(inventoriesToBeReleased);
         reservationRespository.saveAndFlush(previousReservationEntity);
+        log.info("This cancellation has been finished successfully!");
         return previousReservationEntity;
     }
 

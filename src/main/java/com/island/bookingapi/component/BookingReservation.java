@@ -38,6 +38,7 @@ public class BookingReservation {
      * @see         ReservationEntity
      */
     @Retryable(maxAttempts = 3, value = RuntimeException.class, backoff = @Backoff(delay = 1000, multiplier = 2))
+    @Transactional
     public ReservationEntity bookReservation(RequestReservation requestReservation){
         //functions to be implemented as below:
         //check if there are enough free sites between checkinDate and checkoutDate from Inventory
@@ -45,6 +46,7 @@ public class BookingReservation {
         //then insert a new reservation
         //finally, a reservation id is returned if free site num is enough; otherwise, this reservation failed and return
         //error code/msg to client side via controller
+        log.info("Start to book a new reservation:");
         var newReservation = reservationEntityBuilder.apply(requestReservation);
 
         String errorMsg;
@@ -63,17 +65,18 @@ public class BookingReservation {
 
         //booking date should be between tomorrow and up to 1 month
         if( startDate.isBefore(LocalDate.now().plusDays(1)) || startDate.isAfter(LocalDate.now().plusMonths(1)) ){
+            errorMsg = "The start date on this reservation should be between " + LocalDate.now().plusDays(1)
+                    + " and " + LocalDate.now().plusMonths(1);
             newReservation.setStatus(ReservationStatus.FAIL);
-            newReservation.setBookingErrorMsg("The start date on this reservation should be between " + LocalDate.now().plusDays(1)
-                    + " and " + LocalDate.now().plusMonths(1));
+            newReservation.setBookingErrorMsg(errorMsg);
+            log.info(errorMsg);
             return newReservation;
         }
 
         return completeReservation(startDate,endDate,newReservation);
     }
 
-    @Transactional
-    protected ReservationEntity completeReservation(LocalDate startDate, LocalDate endDate, ReservationEntity newReservation)  {
+    private ReservationEntity completeReservation(LocalDate startDate, LocalDate endDate, ReservationEntity newReservation)  {
         //retrieve all inventories between booking dates
         var toBeBookedCampSites = inventoryRepository.findInventoryEntitiesByStayDateBetween(startDate,endDate);
         log.info("Current inventory between {} and {}", startDate,endDate);
@@ -92,24 +95,28 @@ public class BookingReservation {
             newReservation.setStatus(ReservationStatus.RESERVED);
             newReservation.setBookingDT(LocalDateTime.now());
 
+            log.info("Saving this new reservation:");
+            var savedRE = reservationRespository.saveAndFlush(newReservation);
+            System.out.println(savedRE.toString());
+
             //Note: this is to demo on how optimistic locking works
             if(newReservation.getName().contains("slow_transaction_demo")){
                 //sleep 30s. If another user books a same date range during this time,
                 //below inventoryRepository.saveAllAndFlush should throw Optimistic exception.
                 try {
+                    log.info("Sleeping 30s to demo a slow reservation transaction...");
                     Thread.sleep(30000);
+                    //throw new RuntimeException("force to rollback transaction!");
                 }catch (InterruptedException ie)
                 {
                     log.warn("InterruptedException occurred when sleeping!");
                 }
             }
 
+            log.info("Saving the updated inventory:");
             inventoryRepository.saveAllAndFlush(toBeBookedCampSites);
-            var savedRE = reservationRespository.save(newReservation);
 
-            log.info("Current reservation is booked successfully with below info: ");
-            System.out.println(savedRE.toString());
-
+            log.info("Current reservation is booked successfully with below info!");
             return savedRE;
         }else{
             newReservation.setStatus(ReservationStatus.FAIL);

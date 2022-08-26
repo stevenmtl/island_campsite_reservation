@@ -15,12 +15,13 @@ public class BookingModification {
 
     private final BookingReservation bookingReservation;
     private final BookingCancellation bookingCancellation;
+
     @Transactional
     public ReservationEntity modifyReservation(RequestModification requestModification){
         //1. cancel the previous one
         //2. reserve a new one
         //3. return a new reservation
-
+        log.info("Start to modify an reservation(cancel & book):");
         var requestCancellation = RequestCancellation.builder()
                 .previousReservationId(requestModification.getPreviousReservationId())
                 .email(requestModification.getEmail())
@@ -28,6 +29,8 @@ public class BookingModification {
 
         var cancelledReservaction = bookingCancellation.cancelReservation(requestCancellation);
         var newReservation = bookingReservation.bookReservation(requestModification);
+
+        log.info("Finished modifying an reservation(cancel & book)!");
 
         return newReservation;
     }
