@@ -16,6 +16,7 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Cacheable(value = true)
 @Table(name = "INVENTORY_TB")
 public class InventoryEntity implements Serializable {
 

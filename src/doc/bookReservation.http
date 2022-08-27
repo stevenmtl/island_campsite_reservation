@@ -2,11 +2,11 @@ POST http://localhost:9090/bookReservation
 Content-Type: application/json
 
 {
-  "startDate":"2022-08-27",
-  "endDate":"2022-08-30",
+  "startDate":"2022-09-8",
+  "endDate":"2022-09-08",
   "email":"steven.mtl@gmail.com",
   "name":"Steven Li",
-  "numOfGuests": 30
+  "numOfGuests": 1
 }
 
 ###

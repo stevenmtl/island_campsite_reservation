@@ -37,7 +37,7 @@ public class BookingReservation {
      * @return      a ReservationEntity that includes all reservation info such as reservactionID,etc
      * @see         ReservationEntity
      */
-    @Retryable(maxAttempts = 3, value = RuntimeException.class, backoff = @Backoff(delay = 1000, multiplier = 2))
+    @Retryable(maxAttempts = 10, value = RuntimeException.class, backoff = @Backoff(delay = 100, multiplier = 2))
     @Transactional
     public ReservationEntity bookReservation(RequestReservation requestReservation){
         //functions to be implemented as below:
@@ -95,9 +95,7 @@ public class BookingReservation {
             newReservation.setStatus(ReservationStatus.RESERVED);
             newReservation.setBookingDT(LocalDateTime.now());
 
-            log.info("Saving this new reservation:");
-            var savedRE = reservationRespository.saveAndFlush(newReservation);
-            System.out.println(savedRE.toString());
+
 
             //Note: this is to demo on how optimistic locking works
             if(newReservation.getName().contains("slow_transaction_demo")){
@@ -115,6 +113,10 @@ public class BookingReservation {
 
             log.info("Saving the updated inventory:");
             inventoryRepository.saveAllAndFlush(toBeBookedCampSites);
+
+            log.info("Saving this new reservation:");
+            var savedRE = reservationRespository.saveAndFlush(newReservation);
+            System.out.println(savedRE.toString());
 
             log.info("Current reservation is booked successfully with below info!");
             return savedRE;
